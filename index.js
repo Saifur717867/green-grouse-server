@@ -75,6 +75,26 @@ async function run() {
       res.send(result)
     })
 
+    app.put('/update/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateJob = req.body;
+      const job = {
+        $set: {
+          title: updateJob.title,
+          photo: updateJob.photo,
+          minimumPrice: updateJob.minimumPrice,
+          maximumPrice: updateJob.maximumPrice,
+          category: updateJob.category,
+          deadline: updateJob.deadline,
+          Description: updateJob.Description
+        }
+      }
+      const result = await addedJob.updateOne(filter, job, options);
+      res.send(result)
+    })
+
 
 
 
