@@ -32,6 +32,22 @@ async function run() {
     const addedJob = client.db('jobDb').collection('job');
 
 
+    app.get('/webCategory', async (req, res) => {
+      const cursor = addedJob.find({category: "Web Design and Development"});
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.get('/graphicsCategory', async (req, res) => {
+      const cursor = addedJob.find({category: "Graphics Design"});
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.get('/marketingCategory', async (req, res) => {
+      const cursor = addedJob.find({category: "Digital Marketing"});
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     app.get('/jobs', async (req, res) => {
       const cursor = addedJob.find();
       const result = await cursor.toArray();
