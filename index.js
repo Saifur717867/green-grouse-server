@@ -97,7 +97,15 @@ async function run() {
       res.send(result)
     })
 
+    // delete crud operation 
 
+    app.delete('/jobs/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) };
+            const result = await addedJob.deleteOne(query);
+            res.send(result)
+          })
 
 
     // Send a ping to confirm a successful connection
@@ -144,27 +152,6 @@ app.listen(port, () => {
 //       res.send(result)
 //     })
 
-//     app.put('/cars/:id', async (req, res) => {
-//       const id = req.params.id;
-//       const filter = { _id: new ObjectId(id) };
-//       const options = { upsert: true };
-//       const updateCar = req.body;
-//       const car = {
-//         $set: {
-//           name: updateCar.name,
-//           carPhoto: updateCar.carPhoto,
-//           BrandName: updateCar.BrandName,
-//           BrandPhoto: updateCar.BrandPhoto,
-//           category: updateCar.category,
-//           price: updateCar.price,
-//           Rating: updateCar.Rating,
-//           Description: updateCar.Description
-//         }
-//       }
-//       const result = await addedCars.updateOne(filter, car, options);
-//       res.send(result)
-//     })
-
 //     //  my cart data
 //     app.get('/cart', async (req, res) => {
 //       const cursor = addedCart.find();
@@ -192,30 +179,4 @@ app.listen(port, () => {
 //       res.send(result)
 //     })
 
-//     app.delete('/cart/:id', async (req, res) => {
-//       const id = req.params.id;
-//       console.log(id)
-//       const query = { _id : id };
-//       const result = await addedCart.deleteOne(query);
-//       res.send(result)
-//     })
-
-
-//     // Send a ping to confirm a successful connection
-//     await client.db("admin").command({ ping: 1 });
-//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     // await client.close();
-//   }
-// }
-// run().catch(console.dir);
-
-// app.get('/', (req, res) => {
-//   res.send("The assignment-11 server is running")
-// })
-
-// app.listen(port, () => {
-//   console.log(`The Port is : ${port}`)
-// })
 
