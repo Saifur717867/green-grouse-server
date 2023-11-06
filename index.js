@@ -44,6 +44,17 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/Jobs', async (req, res) => {
+      console.log(req.query.email)
+      let query = {};
+      if(req.query?.email){
+        query = {email: req.query.email}
+      }
+      const cursor = addedJob.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     app.get('/jobs', async (req, res) => {
       const cursor = addedJob.find();
       const result = await cursor.toArray();
@@ -56,6 +67,9 @@ async function run() {
             const result = await addedJob.insertOne(newJob);
             res.send(result)
           })
+
+
+          
 
 
     // Send a ping to confirm a successful connection
