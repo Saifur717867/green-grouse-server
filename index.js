@@ -1,6 +1,6 @@
 const express = require('express');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -23,23 +23,23 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7) await
-     client.connect();
+    client.connect();
 
     const addedJob = client.db('jobDb').collection('job');
 
 
     app.get('/webCategory', async (req, res) => {
-      const cursor = addedJob.find({category: "Web Design and Development"});
+      const cursor = addedJob.find({ category: "Web Design and Development" });
       const result = await cursor.toArray();
       res.send(result);
     })
     app.get('/graphicsCategory', async (req, res) => {
-      const cursor = addedJob.find({category: "Graphics Design"});
+      const cursor = addedJob.find({ category: "Graphics Design" });
       const result = await cursor.toArray();
       res.send(result);
     })
     app.get('/marketingCategory', async (req, res) => {
-      const cursor = addedJob.find({category: "Digital Marketing"});
+      const cursor = addedJob.find({ category: "Digital Marketing" });
       const result = await cursor.toArray();
       res.send(result);
     })
@@ -47,8 +47,8 @@ async function run() {
     app.get('/Jobs', async (req, res) => {
       console.log(req.query.email)
       let query = {};
-      if(req.query?.email){
-        query = {email: req.query.email}
+      if (req.query?.email) {
+        query = { email: req.query.email }
       }
       const cursor = addedJob.find(query);
       const result = await cursor.toArray();
@@ -62,14 +62,20 @@ async function run() {
     })
 
     app.post('/jobs', async (req, res) => {
-            const newJob = req.body;
-            console.log(newJob)
-            const result = await addedJob.insertOne(newJob);
-            res.send(result)
-          })
+      const newJob = req.body;
+      console.log(newJob)
+      const result = await addedJob.insertOne(newJob);
+      res.send(result)
+    })
+
+    app.get('/jobs/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await addedJob.findOne(query);
+      res.send(result)
+    })
 
 
-          
 
 
     // Send a ping to confirm a successful connection
@@ -83,12 +89,12 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-    res.send("The assignment-11 server is running")
-  })
-  
-  app.listen(port, () => {
-    console.log(`The Port is : ${port}`)
-  })
+  res.send("The assignment-11 server is running")
+})
+
+app.listen(port, () => {
+  console.log(`The Port is : ${port}`)
+})
 
 
 
@@ -169,7 +175,7 @@ app.get('/', (req, res) => {
 //       res.send(result)
 //     })
 
-//     //  my cart data 
+//     //  my cart data
 //     app.get('/cart', async (req, res) => {
 //       const cursor = addedCart.find();
 //       const result = await cursor.toArray();
