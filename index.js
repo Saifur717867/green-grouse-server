@@ -75,7 +75,9 @@ async function run() {
       res.send(result)
     })
 
-    app.put('/update/:id', async (req, res) => {
+    // up to date jobs 
+
+    app.put('/jobs/:id', async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
@@ -117,38 +119,6 @@ app.listen(port, () => {
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster02.uzxvjco.mongodb.net/?retryWrites=true&w=majority`;
-
-// // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri, {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   }
-// });
-
-// async function run() {
-//   try {
-//     // Connect the client to the server	(optional starting in v4.7) await
-//      client.connect();
 
 
 //     const addedCars = client.db('CarsDb').collection('car');
