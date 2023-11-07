@@ -26,6 +26,7 @@ async function run() {
     client.connect();
 
     const addedJob = client.db('jobDb').collection('job');
+    const orderBid = client.db('jobDb').collection('bid');
 
 
     app.get('/webCategory', async (req, res) => {
@@ -106,6 +107,26 @@ async function run() {
             const result = await addedJob.deleteOne(query);
             res.send(result)
           })
+
+          // order bid section 
+          app.post('/bids', async (req, res) => {
+            const bidJob = req.body;
+            console.log(bidJob)
+            const result = await orderBid.insertOne(bidJob);
+            res.send(result)
+          })
+
+          app.get('/bids', async (req, res) => {
+            console.log(req.query.email)
+            let query = {};
+            if (req.query?.email) {
+              query = { email: req.query.email }
+            }
+            const cursor = orderBid.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+          })
+
 
 
     // Send a ping to confirm a successful connection
