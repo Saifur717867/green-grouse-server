@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 
 // middleware 
 app.use(cors({
-  origin: ['https://bejewelled-dragon-b28d12.netlify.app'],
+  origin: ['http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json());
@@ -63,8 +63,8 @@ async function run() {
       res
         .cookie('token', token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+          secure: true,
+          sameSite: 'none' 
         })
         .send({ success: true })
     })
@@ -79,13 +79,14 @@ async function run() {
       res
         .cookie('token', token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+          secure: true,
+          sameSite: 'none' 
         })
         .send({ success: true })
     })
 
-
+    // secure: process.env.NODE_ENV === 'production',
+    // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
 
 
     app.get('/webCategory', async (req, res) => {
