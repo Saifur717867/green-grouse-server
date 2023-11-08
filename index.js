@@ -85,10 +85,6 @@ async function run() {
         .send({ success: true })
     })
 
-    // secure: process.env.NODE_ENV === 'production',
-    // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-
-
     app.get('/webCategory', async (req, res) => {
       const cursor = addedJob.find({ category: "Web Design and Development" });
       const result = await cursor.toArray();
@@ -187,18 +183,6 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
-
-    // app.get('/bids', async (req, res) => {
-    //   console.log(req.query.seller)
-    //   console.log('got token from client site', req.cookies.token)
-    //   let query = {};
-    //   if (req.query?.seller) {
-    //     query = { email: req.query.seller }
-    //   }
-    //   const cursor = orderBid.find(query);
-    //   const result = await cursor.toArray();
-    //   res.send(result);
-    // })
 
     app.get('/bids', async (req, res) => {
       const bidItems = req.body;
