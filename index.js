@@ -63,10 +63,13 @@ async function run() {
       res
         .cookie('token', token, {
           httpOnly: true,
-          secure: true,
+          secure: true, 
         })
         .send({ success: true })
     })
+    
+    // secure: process.env.NODE_ENV === 'production', 
+    // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
 
     app.post('/jwt', async (req, res) => {
       const signInUser = req.body;
@@ -75,12 +78,13 @@ async function run() {
       res
         .cookie('token', token, {
           httpOnly: true,
-          secure: true,
+          secure: true, 
         })
         .send({ success: true })
     })
 
-
+    // secure: process.env.NODE_ENV === 'production', 
+    // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
 
 
     app.get('/webCategory', async (req, res) => {
