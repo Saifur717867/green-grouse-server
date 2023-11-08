@@ -63,11 +63,12 @@ async function run() {
       res
         .cookie('token', token, {
           httpOnly: true,
-          secure: true, 
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         })
         .send({ success: true })
     })
-    
+
     // secure: process.env.NODE_ENV === 'production', 
     // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
 
@@ -78,13 +79,13 @@ async function run() {
       res
         .cookie('token', token, {
           httpOnly: true,
-          secure: true, 
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         })
         .send({ success: true })
     })
 
-    // secure: process.env.NODE_ENV === 'production', 
-    // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+
 
 
     app.get('/webCategory', async (req, res) => {
