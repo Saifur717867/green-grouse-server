@@ -1,13 +1,19 @@
 const express = require('express');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster03.tgxypoz.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -20,6 +26,27 @@ const client = new MongoClient(uri, {
   }
 });
 
+// const signer = async (req, res, next) => {
+//   console.log('call:', req.host, req.originalUrl)
+//   next();
+// }
+
+// const verifyToken = async (req, res, next) =>{
+//   const token = req.cookies?.token;
+//   if(!token){
+//     return res.status(401).send({message: 'unauthorized access'})
+//   }
+//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+//     if(err){
+//       return res.status(401).send({message: 'unauthorized access'})
+//     }
+//     req.user = decoded;
+//     next();
+//   })
+// }
+
+
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7) await
@@ -27,6 +54,33 @@ async function run() {
 
     const addedJob = client.db('jobDb').collection('job');
     const orderBid = client.db('jobDb').collection('bid');
+
+    // auth related api jwt 
+    app.post('/jwt', async(req, res) => {
+      const user = req.body;
+      console.log(user);
+      const token = jwt.sign(user, 'process.env.ACCESS_TOKEN_SECRET', {expiresIn: '1h'})
+      res
+      .cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+      })
+      .send({success: true})
+    })
+
+    app.post('/jwt', async(req, res) => {
+      const signInUser = req.body;
+      console.log(signInUser);
+      const token = jwt.sign(signInUser, 'process.env.ACCESS_TOKEN_SECRET', {expiresIn: '1h'})
+      res
+      .cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+      })
+      .send({success: true})
+    })
+
+
 
 
     app.get('/webCategory', async (req, res) => {
@@ -101,31 +155,86 @@ async function run() {
     // delete crud operation 
 
     app.delete('/jobs/:id', async (req, res) => {
-            const id = req.params.id;
-            console.log(id)
-            const query = { _id: new ObjectId(id) };
-            const result = await addedJob.deleteOne(query);
-            res.send(result)
-          })
+      const id = req.params.id;
+      console.log(id)
+      const query = { _id: new ObjectId(id) };
+      const result = await addedJob.deleteOne(query);
+      res.send(result)
+    })
 
-          // order bid section 
-          app.post('/bids', async (req, res) => {
-            const bidJob = req.body;
-            console.log(bidJob)
-            const result = await orderBid.insertOne(bidJob);
-            res.send(result)
-          })
+    // order bid section 
+    app.post('/bids', async (req, res) => {
+      const bidJob = req.body;
+      console.log(bidJob)
+      const result = await orderBid.insertOne(bidJob);
+      res.send(result)
+    })
 
-          app.get('/bids', async (req, res) => {
-            console.log(req.query.email)
-            let query = {};
-            if (req.query?.email) {
-              query = { email: req.query.email }
-            }
-            const cursor = orderBid.find(query);
-            const result = await cursor.toArray();
-            res.send(result);
-          })
+    app.get('/bids', async (req, res) => {
+      console.log(req.query.email)
+      console.log('got token from client site', req.cookies.token)
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email }
+      }
+      const cursor = orderBid.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    // app.get('/bids', async (req, res) => {
+    //   console.log(req.query.seller)
+    //   console.log('got token from client site', req.cookies.token)
+    //   let query = {};
+    //   if (req.query?.seller) {
+    //     query = { email: req.query.seller }
+    //   }
+    //   const cursor = orderBid.find(query);
+    //   const result = await cursor.toArray();
+    //   res.send(result);
+    // })
+
+    app.get('/bids', async (req, res) => {
+      const bidItems = req.body;
+      console.log(bidItems)
+      const result = await orderBid.find().toArray();
+      res.send(result);
+    })
+
+    app.get('/bids/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await orderBid.findOne(query);
+      res.send(result)
+    })
+
+    app.patch('/bids/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updateBid = req.body;
+      console.log(updateBid);
+      const updateDoc = {
+        $set: {
+          status: updateBid.status
+        },
+      };
+      const result = await orderBid.updateOne(query, updateDoc);
+      res.send(result)
+    })
+
+    app.patch('/bids/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updateBidCompleted = req.body;
+      console.log(updateBid);
+      const updateDoc = {
+        $set: {
+          done: updateBidCompleted.done
+        },
+      };
+      const result = await orderBid.updateOne(query, updateDoc);
+      res.send(result)
+    })
 
 
 
