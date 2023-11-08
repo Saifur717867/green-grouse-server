@@ -56,28 +56,28 @@ async function run() {
     const orderBid = client.db('jobDb').collection('bid');
 
     // auth related api jwt 
-    app.post('/jwt', async(req, res) => {
+    app.post('/jwt', async (req, res) => {
       const user = req.body;
       console.log(user);
-      const token = jwt.sign(user, 'process.env.ACCESS_TOKEN_SECRET', {expiresIn: '1h'})
+      const token = jwt.sign(user, 'process.env.ACCESS_TOKEN_SECRET', { expiresIn: '1h' })
       res
-      .cookie('token', token, {
-        httpOnly: true,
-        secure: false,
-      })
-      .send({success: true})
+        .cookie('token', token, {
+          httpOnly: true,
+          secure: true,
+        })
+        .send({ success: true })
     })
 
-    app.post('/jwt', async(req, res) => {
+    app.post('/jwt', async (req, res) => {
       const signInUser = req.body;
       console.log(signInUser);
-      const token = jwt.sign(signInUser, 'process.env.ACCESS_TOKEN_SECRET', {expiresIn: '1h'})
+      const token = jwt.sign(signInUser, 'process.env.ACCESS_TOKEN_SECRET', { expiresIn: '1h' })
       res
-      .cookie('token', token, {
-        httpOnly: true,
-        secure: false,
-      })
-      .send({success: true})
+        .cookie('token', token, {
+          httpOnly: true,
+          secure: true,
+        })
+        .send({ success: true })
     })
 
 
@@ -208,7 +208,7 @@ async function run() {
       res.send(result)
     })
 
-    app.patch('/bids/:id', async(req, res) => {
+    app.patch('/bids/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const updateBid = req.body;
@@ -222,7 +222,7 @@ async function run() {
       res.send(result)
     })
 
-    app.patch('/bids/:id', async(req, res) => {
+    app.patch('/bids/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const updateBidCompleted = req.body;
