@@ -214,14 +214,36 @@ async function run() {
     app.patch('/bids/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const updateBidCompleted = req.body;
+      const updateBidReject = req.body;
       console.log(updateBid);
       const updateDoc = {
         $set: {
-          done: updateBidCompleted.done
+          status: updateBidReject.reject
         },
       };
       const result = await orderBid.updateOne(query, updateDoc);
+      res.send(result)
+    })
+
+    app.patch('/bids/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updateComplete = req.body;
+      console.log(updateBid);
+      const updateDoc = {
+        $set: {
+          status: updateComplete.complete
+        },
+      };
+      const result = await orderBid.updateOne(query, updateDoc);
+      res.send(result)
+    })
+
+    app.delete('/bids/:id', async (req, res) => {
+      const id = req.params.id;
+      console.log(id)
+      const query = { _id: new ObjectId(id) };
+      const result = await orderBid.deleteOne(query);
       res.send(result)
     })
 
