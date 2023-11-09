@@ -26,11 +26,6 @@ const client = new MongoClient(uri, {
   }
 });
 
-// const signer = async (req, res, next) => {
-//   console.log('call:', req.host, req.originalUrl)
-//   next();
-// }
-
 // const verifyToken = async (req, res, next) =>{
 //   const token = req.cookies?.token;
 //   if(!token){
@@ -44,6 +39,13 @@ const client = new MongoClient(uri, {
 //     next();
 //   })
 // }
+
+
+// const signer = async (req, res, next) => {
+//   console.log('call:', req.host, req.originalUrl)
+//   next();
+// }
+
 
 
 async function run() {
