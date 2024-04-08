@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 
 // middleware 
 app.use(cors({
-  origin: ['https://bejewelled-dragon-b28d12.netlify.app'],
+  origin: ['http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json());
